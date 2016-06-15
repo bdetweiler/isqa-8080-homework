@@ -80,15 +80,16 @@ public class Brian extends Configured implements Tool {
 	public static class Reduce extends Reducer<IntWritable, DoubleWritable, IntWritable, DoubleWritable> {
 		@Override
 		public void reduce(IntWritable movieId, Iterable<DoubleWritable> ratings, Context context) throws IOException, InterruptedException {
-			int sum = 0;
-			int counter = 0;
+			Double sum = 0D;
+			Double counter = 0D;
 			for (DoubleWritable rating : ratings) {
 				sum += rating.get();
 				++counter;
 			}
-		
+			
+			Double average = new Double(sum / counter);
 			if (counter > USER_NUMBER) {
-				context.write(movieId, new DoubleWritable(sum / counter));
+				context.write(movieId, new DoubleWritable(average));
 			}
 		}
 	}
